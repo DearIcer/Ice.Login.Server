@@ -1,0 +1,6 @@
+@Ice.Login.Http_HostAddress = http://localhost:5062
+
+GET {{Ice.Login.Http_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
