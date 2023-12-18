@@ -8,7 +8,7 @@ try
     {
         Console.WriteLine("Use Mysql:1");
         Console.WriteLine("Use SqlServer:2");
-        switch (Int32.Parse(Console.ReadLine()))
+        switch (int.Parse(Console.ReadLine()))
         {
             case 1:
                 var serverVersion = new MySqlServerVersion(new Version(5, 7, 26));
@@ -37,7 +37,7 @@ static void init(DbContextOptions<IceDbContext> dbContext)
 {
     try
     {
-        IceDbContext db = new IceDbContext(dbContext);
+        IceDbContext db = new(dbContext);
         db.Database.EnsureDeleted();
         db.Database.EnsureCreated();
         Console.WriteLine("IceDbContext init success");
