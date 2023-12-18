@@ -10,9 +10,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ice.Login.Entity\Ice.Login.Entity.csproj" />
-    <ProjectReference Include="..\Share\Share.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.Model;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ice.Login.Http.Controllers.Base
 {
@@ -6,5 +7,14 @@ namespace Ice.Login.Http.Controllers.Base
     [Route("api/[controller]")]
     public class BaseController : Controller
     {
+        protected ApiResult Response(object data = null, string message = null, string errorCode = null)
+        {
+            return new ApiResult
+            {
+                Data = data,
+                Message = message,
+                ErrorCode = errorCode
+            };
+        }
     }
 }

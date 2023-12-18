@@ -3,11 +3,8 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Ice.Login.Repository.Context;
 using Ice.Login.Repository.IRepository.Base;
-using Ice.Login.Repository.Repository.Base;
 using Ice.Login.Service.IService.Base;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +36,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
         containerBuilder.RegisterAssemblyTypes(Assembly.Load("Ice.Login.Repository"))
             .Where(t => typeof(IBaseRepository).IsAssignableFrom(t))
             .AsImplementedInterfaces()
+            .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
             .InstancePerLifetimeScope();
     });
 
@@ -48,14 +46,22 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
         containerBuilder.RegisterAssemblyTypes(Assembly.Load("Ice.Login.Service"))
             .Where(t => typeof(IBaseService).IsAssignableFrom(t))
             .AsImplementedInterfaces()
+            .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
             .InstancePerLifetimeScope();
     });
 
-builder.Services.AddDbContext<IceDbContext>(options =>
-//options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-                     new MySqlServerVersion(new Version(5, 7, 26)))
-    );
+//builder.Services.AddDbContext<IceDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
+//    //options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+//    //                 new MySqlServerVersion(new Version(5, 7, 26)))
+
+//    ));
+
+builder.Services.AddDbContext<TestClass1>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+
+builder.Services.AddScoped<DbContext, TestClass1>();
 
 var app = builder.Build();
 

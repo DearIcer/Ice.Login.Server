@@ -5,15 +5,19 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ice.Login.Http", "Ice.Login.Http\Ice.Login.Http.csproj", "{46C19577-674A-4230-B15B-F3D936626063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ice.Login.Entity", "Ice.Login.Entity\Ice.Login.Entity.csproj", "{6CD21D27-D8A8-4B65-8A6B-FE43C4D805C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ice.Login.Entity", "Ice.Login.Entity\Ice.Login.Entity.csproj", "{6CD21D27-D8A8-4B65-8A6B-FE43C4D805C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ice.Login.Repository", "Ice.Login.Repository\Ice.Login.Repository.csproj", "{DFE5D5D6-E0EB-4369-BE4C-8EEE5A3C5713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ice.Login.Repository", "Ice.Login.Repository\Ice.Login.Repository.csproj", "{DFE5D5D6-E0EB-4369-BE4C-8EEE5A3C5713}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ice.Login.Service", "Ice.Login.Service\Ice.Login.Service.csproj", "{AC48476D-A48C-45A0-8F95-8BA0FDDF57B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ice.Login.Service", "Ice.Login.Service\Ice.Login.Service.csproj", "{AC48476D-A48C-45A0-8F95-8BA0FDDF57B7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DB", "DB", "{9FB9BF7C-089F-4792-9E86-28A7CD5B9F95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTool", "DbTool\DbTool.csproj", "{18DFCED4-33C4-4FD9-BB61-6747FD764510}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTool", "DbTool\DbTool.csproj", "{18DFCED4-33C4-4FD9-BB61-6747FD764510}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0F7755D0-787C-43BF-BA68-0DFB443D10A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share", "Share\Share.csproj", "{B096C1E2-EA2A-444F-81E3-912792261408}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{18DFCED4-33C4-4FD9-BB61-6747FD764510}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18DFCED4-33C4-4FD9-BB61-6747FD764510}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18DFCED4-33C4-4FD9-BB61-6747FD764510}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F7755D0-787C-43BF-BA68-0DFB443D10A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F7755D0-787C-43BF-BA68-0DFB443D10A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F7755D0-787C-43BF-BA68-0DFB443D10A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F7755D0-787C-43BF-BA68-0DFB443D10A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B096C1E2-EA2A-444F-81E3-912792261408}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B096C1E2-EA2A-444F-81E3-912792261408}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B096C1E2-EA2A-444F-81E3-912792261408}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B096C1E2-EA2A-444F-81E3-912792261408}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Ice.Login.Entity\Ice.Login.Entity.csproj" />
     <ProjectReference Include="..\Ice.Login.Repository\Ice.Login.Repository.csproj" />
     <ProjectReference Include="..\Ice.Login.Service\Ice.Login.Service.csproj" />
