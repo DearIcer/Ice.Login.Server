@@ -57,11 +57,11 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 
 //    ));
 
-builder.Services.AddDbContext<TestClass1>(options =>
+builder.Services.AddDbContext<IceDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
-builder.Services.AddScoped<DbContext, TestClass1>();
+builder.Services.AddScoped<DbContext, IceDbContext>();
 
 var app = builder.Build();
 

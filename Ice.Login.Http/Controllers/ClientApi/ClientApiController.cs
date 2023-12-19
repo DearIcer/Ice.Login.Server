@@ -19,7 +19,7 @@ namespace Ice.Login.Http.Controllers.ClientApi
         [HttpGet]
         public async Task<ApiResult> Get()
         {
-            var data = await _userInfoRepository.Queryable(it => it.Id > 1);
+            var data = await _userInfoRepository.Queryable(it => it.Id >= 1);
             return Response("Hello World");
         }
 

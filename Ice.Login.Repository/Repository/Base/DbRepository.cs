@@ -5,25 +5,45 @@ namespace Ice.Login.Repository.Repository.Base
 {
     public class DbRepository : BaseRepository, IUnitOfWork
     {
-        protected TestClass1 _dbContext { get; }
-        public DbRepository(TestClass1 dbContext)
+        protected IceDbContext _dbContext { get; }
+        public DbRepository(IceDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public void BeginTransaction()
+        //public void BeginTransaction()
+        //{
+        //    _dbContext.Database.BeginTransaction();
+        //}
+
+        //public void CommitTransaction()
+        //{
+        //    _dbContext.Database.CommitTransactionAsync;
+        //}
+
+        //public void RollbackTransaction()
+        //{
+        //    _dbContext.RollbackTransaction();   
+        //}
+
+        //public async Task<int> SaveChangesAsync()
+        //{
+        //    return await _dbContext.SaveChangesAsync();
+        //}
+
+        async Task IUnitOfWork.BeginTransaction()
         {
-            _dbContext.Database.BeginTransaction();
+            await _dbContext.Database.BeginTransactionAsync();
         }
 
-        public void CommitTransaction()
+        async Task IUnitOfWork.CommitTransaction()
         {
-            _dbContext.CommitTransaction();
+            await _dbContext.Database.CommitTransactionAsync();
         }
 
-        public void RollbackTransaction()
+        async Task IUnitOfWork.RollbackTransaction()
         {
-            _dbContext.RollbackTransaction();   
+            await _dbContext.Database.RollbackTransactionAsync();
         }
 
         public async Task<int> SaveChangesAsync()

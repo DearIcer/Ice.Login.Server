@@ -1,5 +1,6 @@
 ﻿using Ice.Login.Entity.Backend;
 using Microsoft.EntityFrameworkCore;
+using Share;
 
 namespace Ice.Login.Repository.Context
 {

@@ -5,43 +5,36 @@ namespace Share
 {
     public interface IUnitOfWork
     {
-        void BeginTransaction();
-        void CommitTransaction();
-        void RollbackTransaction();
+        Task BeginTransaction();
+        Task CommitTransaction();
+        Task RollbackTransaction();
         Task<int> SaveChangesAsync();
     }
     public class UnitOfWork : DbContext, IUnitOfWork
     {
-        private readonly DbContext _dbContext;
         private IDbContextTransaction _transaction;
-
-        public UnitOfWork(DbContext dbContext)
+        public async virtual Task BeginTransaction()
         {
-            _dbContext = dbContext;
+            _transaction = await Database.BeginTransactionAsync();
         }
 
-        public virtual void BeginTransaction()
+        public async virtual Task CommitTransaction()
         {
-            _transaction = _dbContext.Database.BeginTransaction();
-        }
-
-        public virtual void CommitTransaction()
-        {
-            _transaction.Commit();
-            _transaction.Dispose();
+            await _transaction.CommitAsync();
+            await _transaction.DisposeAsync();
             _transaction = null;
         }
 
-        public virtual void RollbackTransaction()
+        public async virtual Task RollbackTransaction()
         {
-            _transaction.Rollback();
-            _transaction.Dispose();
+            await _transaction.RollbackAsync();
+            await _transaction.DisposeAsync();
             _transaction = null;
         }
 
         public async virtual Task<int> SaveChangesAsync()
         {
-            return await _dbContext.SaveChangesAsync();
+            return await SaveChangesAsync();
         }
     }
 
