@@ -1,4 +1,5 @@
-﻿using Common.Model;
+﻿using Common.Error;
+using Common.Model;
 using Ice.Login.Http.Controllers.Base;
 using Ice.Login.Service.Service.ClientService.UserMng;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace Ice.Login.Http.Controllers.ClientApi
         [HttpGet]
         public async Task<ApiResult> Get()
         {
+            throw new KnownException("Test", "Test", 500);
             return Response("Hello World");
         }
 

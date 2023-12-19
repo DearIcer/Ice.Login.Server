@@ -6,7 +6,7 @@ try
     DbContextOptions<IceDbContext> options;
     while (true)
     {
-        Console.WriteLine("Use Mysql:1");
+        Console.WriteLine("Use Mysql:1(这个还不能用，我还在处理==)");
         Console.WriteLine("Use SqlServer:2");
         switch (int.Parse(Console.ReadLine()))
         {

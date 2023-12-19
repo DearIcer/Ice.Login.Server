@@ -1,11 +1,15 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Common.Error;
+using Common.Model;
 using Ice.Login.Repository.Context;
 using Ice.Login.Repository.IRepository.Base;
 using Ice.Login.Service.Service.Base;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -71,6 +75,42 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler(errApp =>
+{
+    errApp.Run(async context =>
+    {
+        IExceptionHandlerPathFeature exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>()!;
+        IKnownException? knownException = exceptionHandlerPathFeature.Error as IKnownException;
+        if (knownException == null)
+        {
+            var logger = context.RequestServices.GetService<ILogger<KnownException>>()!;
+            logger.LogError(exceptionHandlerPathFeature.Error, exceptionHandlerPathFeature.Error.Message);
+            knownException = KnownException.Unknown;
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        }
+        else
+        {
+            knownException = KnownException.FromKnownException(knownException);
+            context.Response.StatusCode = StatusCodes.Status200OK;
+        }
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
+        context.Response.ContentType = "application/json; charset=utf-8";
+        ApiResult rst = new ApiResult
+        {
+            Success = false,
+            Message = knownException.Message,
+            ErrorCode = knownException.ErrorCode,
+            Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
+            Data = knownException.ErrorData
+        };
+        await context.Response.WriteAsync(JsonSerializer.Serialize(rst, options));
+    });
+});
+
 
 app.UseHttpsRedirection();
 
