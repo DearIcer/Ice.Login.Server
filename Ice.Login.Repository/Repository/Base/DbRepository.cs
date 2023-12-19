@@ -11,26 +11,6 @@ namespace Ice.Login.Repository.Repository.Base
             _dbContext = dbContext;
         }
 
-        //public void BeginTransaction()
-        //{
-        //    _dbContext.Database.BeginTransaction();
-        //}
-
-        //public void CommitTransaction()
-        //{
-        //    _dbContext.Database.CommitTransactionAsync;
-        //}
-
-        //public void RollbackTransaction()
-        //{
-        //    _dbContext.RollbackTransaction();   
-        //}
-
-        //public async Task<int> SaveChangesAsync()
-        //{
-        //    return await _dbContext.SaveChangesAsync();
-        //}
-
         async Task IUnitOfWork.BeginTransaction()
         {
             await _dbContext.Database.BeginTransactionAsync();
