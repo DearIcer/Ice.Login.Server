@@ -1,6 +1,6 @@
 ﻿using Share;
 
-namespace Ice.Login.Service.IService.Base
+namespace Ice.Login.Service.Service.Base
 {
     interface IDbService : IUnitOfWork
     {

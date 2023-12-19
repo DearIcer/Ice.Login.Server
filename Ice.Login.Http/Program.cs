@@ -3,7 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Ice.Login.Repository.Context;
 using Ice.Login.Repository.IRepository.Base;
-using Ice.Login.Service.IService.Base;
+using Ice.Login.Service.Service.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 

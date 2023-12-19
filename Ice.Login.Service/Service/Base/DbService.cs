@@ -1,5 +1,4 @@
-﻿using Ice.Login.Service.IService.Base;
-using Share;
+﻿using Share;
 
 namespace Ice.Login.Service.Service.Base
 {

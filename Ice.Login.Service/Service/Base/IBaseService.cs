@@ -1,4 +1,4 @@
-﻿namespace Ice.Login.Service.IService.Base
+﻿namespace Ice.Login.Service.Service.Base
 {
     public interface IBaseService
     {
