@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Ice.Login.Http.Controllers.Base
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class BaseController : Controller
     {
         protected ApiResult Response(object data = null, string message = null, string errorCode = null)

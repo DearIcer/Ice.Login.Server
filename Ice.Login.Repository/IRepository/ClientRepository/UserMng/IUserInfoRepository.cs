@@ -8,10 +8,12 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ice.Login.Repository.IRepository.ClientRepository
+namespace Ice.Login.Repository.IRepository.ClientRepository.UserMng
 {
     public interface IUserInfoRepository : IBaseRepository, IUnitOfWork
     {
         Task<UserInfo> Queryable(Expression<Func<UserInfo, bool>> whereExpression);
+
+        Task<bool> Create(UserInfo userInfo);
     }
 }

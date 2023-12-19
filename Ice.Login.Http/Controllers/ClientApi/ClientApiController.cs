@@ -1,18 +1,17 @@
 ﻿using Common.Model;
 using Ice.Login.Http.Controllers.Base;
-using Ice.Login.Repository.IRepository.ClientRepository;
 using Ice.Login.Service.Service.ClientService.UserMng;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ice.Login.Http.Controllers.ClientApi
 {
-    public class ClientApiController : BaseController
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userService"></param>
+    public class ClientApiController(IUserService userService) : BaseController
     {
-        private readonly IUserService _userService;
-        public ClientApiController(IUserService userService)
-        {
-            _userService = userService;
-        }
+        private readonly IUserService _userService = userService;
 
         /// <summary>
         /// TestGet
@@ -21,21 +20,18 @@ namespace Ice.Login.Http.Controllers.ClientApi
         [HttpGet]
         public async Task<ApiResult> Get()
         {
-            var data = await _userService.Queryable();
-            return Response(data);
-            //return Response("Hello World");
+            return Response("Hello World");
         }
 
         /// <summary>
-        /// TestGet
+        /// 注册账号
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ApiResult> Register()
+        public async Task<ApiResult> Register([FromBody] RegisterAccountRequest body)
         {
-            var data = await _userService.Queryable();
+            var data = await _userService.RegisterAccount(body);
             return Response(data);
-            //return Response("Hello World");
         }
     }
 }

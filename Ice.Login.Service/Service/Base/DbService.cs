@@ -2,31 +2,28 @@
 
 namespace Ice.Login.Service.Service.Base
 {
-    public class DbService : BaseService, IDbService
+    public class DbService(IUnitOfWork unitOfWork) : BaseService, IDbService
     {
-        protected IUnitOfWork _unitOfWork { get; init; }
-        public DbService(IUnitOfWork unitOfWork) 
-        {
-            _unitOfWork = unitOfWork;
-        }
+        protected IUnitOfWork UnitOfWork { get; init; } = unitOfWork;
+
         public async Task BeginTransaction()
         {
-            await _unitOfWork.BeginTransaction();
+            await UnitOfWork.BeginTransaction();
         }
 
         public async Task CommitTransaction()
         {
-            await _unitOfWork.CommitTransaction();  
+            await UnitOfWork.CommitTransaction();  
         }
 
         public async Task RollbackTransaction()
         {
-            await _unitOfWork.RollbackTransaction();
+            await UnitOfWork.RollbackTransaction();
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            return await _unitOfWork.SaveChangesAsync();
+            return await UnitOfWork.SaveChangesAsync();
         }
     }
 }

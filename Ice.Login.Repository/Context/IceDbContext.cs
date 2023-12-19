@@ -4,11 +4,8 @@ using Share;
 
 namespace Ice.Login.Repository.Context
 {
-    public class IceDbContext : DbContext
+    public class IceDbContext(DbContextOptions<IceDbContext> options) : DbContext(options)
     {
-        public IceDbContext(DbContextOptions<IceDbContext> options) : base(options)
-        {
-        }
         public DbSet<UserInfo> UserInfo { get; set; }
     }
 }

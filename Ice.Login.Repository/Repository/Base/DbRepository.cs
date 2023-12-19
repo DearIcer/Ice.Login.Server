@@ -3,32 +3,28 @@ using Share;
 
 namespace Ice.Login.Repository.Repository.Base
 {
-    public class DbRepository : BaseRepository, IUnitOfWork
+    public class DbRepository(IceDbContext dbContext) : BaseRepository, IUnitOfWork
     {
-        protected IceDbContext _dbContext { get; }
-        public DbRepository(IceDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        protected IceDbContext DbContext { get; } = dbContext;
 
         async Task IUnitOfWork.BeginTransaction()
         {
-            await _dbContext.Database.BeginTransactionAsync();
+            await DbContext.Database.BeginTransactionAsync();
         }
 
         async Task IUnitOfWork.CommitTransaction()
         {
-            await _dbContext.Database.CommitTransactionAsync();
+            await DbContext.Database.CommitTransactionAsync();
         }
 
         async Task IUnitOfWork.RollbackTransaction()
         {
-            await _dbContext.Database.RollbackTransactionAsync();
+            await DbContext.Database.RollbackTransactionAsync();
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            return await _dbContext.SaveChangesAsync();
+            return await DbContext.SaveChangesAsync();
         }
     }
 }
