@@ -63,7 +63,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 
 builder.Services.AddDbContext<IceDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+    ).UseLoggerFactory(LoggerFactory.Create(it => { })));
 
 builder.Services.AddScoped<DbContext, IceDbContext>();
 

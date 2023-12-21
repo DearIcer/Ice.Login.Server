@@ -17,7 +17,7 @@ namespace Ice.Login.Repository.Repository.ClientRepository.UserMng
 
         public async Task<UserInfo> Queryable(Expression<Func<UserInfo, bool>> whereExpression)
         {
-            return await DbContext.UserInfo.AsQueryable().Where(whereExpression).FirstAsync();
+            return await DbContext.UserInfo.AsQueryable().Where(whereExpression).FirstOrDefaultAsync();
         }
     }
 }

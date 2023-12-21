@@ -1,4 +1,5 @@
-﻿using Ice.Login.Entity.Backend;
+﻿using Common.Error;
+using Ice.Login.Entity.Backend;
 using Ice.Login.Repository.IRepository.ClientRepository.UserMng;
 using Ice.Login.Service.Service.Base;
 using Share;
@@ -21,7 +22,7 @@ namespace Ice.Login.Service.Service.ClientService.UserMng
             var data = await _userInfoRepository.Queryable(it => it.UserName == body.UserName);
             if (data != null)
             {
-                return false;
+                throw new KnownException()
             }
             UserInfo user = new UserInfo()
             {
