@@ -22,10 +22,11 @@ namespace Ice.Login.Service.Service.ClientService.UserMng
             var data = await _userInfoRepository.Queryable(it => it.UserName == body.UserName);
             if (data != null)
             {
-                throw new KnownException()
+                throw new KnownException("用户名已存在", "10001");
             }
             UserInfo user = new UserInfo()
             {
+                NickName = body.NickName,
                 UserName = body.UserName,
                 Password = body.Password,
                 IsDelete = false,

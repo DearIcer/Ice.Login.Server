@@ -15,6 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var basePath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+    var xmlFiles = new DirectoryInfo(basePath).GetFiles().Where(x => x.Name.Contains(".xml")).ToList();
+    xmlFiles.ForEach(x => options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, x.Name), true));
+});
 builder.Services.AddCors(options =>
     options.AddPolicy("Cors",
         cpBuilder =>
@@ -74,6 +80,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
 }
 
 app.UseExceptionHandler(errApp =>

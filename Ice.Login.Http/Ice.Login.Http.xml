@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ice.Login.Http</name>
+    </assembly>
+    <members>
+        <member name="T:Ice.Login.Http.Controllers.ClientApi.ClientApiController">
+            <summary>
+            
+            </summary>
+            <param name="userService"></param>
+        </member>
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.ClientApiController.#ctor(Ice.Login.Service.Service.ClientService.UserMng.IUserService)">
+            <summary>
+            
+            </summary>
+            <param name="userService"></param>
+        </member>
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.ClientApiController.Get">
+            <summary>
+            TestGet
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.ClientApiController.Register(Ice.Login.Service.Service.ClientService.UserMng.RegisterAccountRequest)">
+            <summary>
+            注册账号
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ice.Login.Service</name>
+    </assembly>
+    <members>
+        <member name="T:Ice.Login.Service.Service.ClientService.UserMng.RegisterAccountRequest">
+            <summary>
+            注册账号请求体
+            </summary>
+        </member>
+        <member name="P:Ice.Login.Service.Service.ClientService.UserMng.RegisterAccountRequest.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Ice.Login.Service.Service.ClientService.UserMng.RegisterAccountRequest.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Ice.Login.Service.Service.ClientService.UserMng.RegisterAccountRequest.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+    </members>
+</doc>
