@@ -28,5 +28,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.ClientApiController.Login(Ice.Login.Service.Service.ClientService.UserMng.LoginRequest)">
+            <summary>
+            登录接口
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

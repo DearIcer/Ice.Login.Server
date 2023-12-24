@@ -35,5 +35,17 @@ namespace Ice.Login.Http.Controllers.ClientApi
             var data = await _userService.RegisterAccount(body);
             return Response(data);
         }
+
+        /// <summary>
+        /// 登录接口
+        /// </summary>
+        /// <param name="body"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ApiResult> Login([FromBody] LoginRequest body)
+        {
+            var data = await _userService.Login(body);
+            return Response(data);
+        }   
     }
 }

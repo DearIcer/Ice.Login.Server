@@ -24,5 +24,25 @@
             密码
             </summary>
         </member>
+        <member name="P:Ice.Login.Service.Service.ClientService.UserMng.LoginRequest.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Ice.Login.Service.Service.ClientService.UserMng.LoginRequest.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Ice.Login.Service.Service.ClientService.UserMng.LoginResponse.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Ice.Login.Service.Service.ClientService.UserMng.LoginResponse.Token">
+            <summary>
+            token
+            </summary>
+        </member>
     </members>
 </doc>

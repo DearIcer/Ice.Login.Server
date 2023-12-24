@@ -9,5 +9,7 @@ namespace Ice.Login.Service.Service.ClientService.UserMng
         Task<UserInfo> Queryable();
 
         Task<bool> RegisterAccount(RegisterAccountRequest body);
+
+        Task<LoginResponse> Login(LoginRequest body);    
     }
 }
