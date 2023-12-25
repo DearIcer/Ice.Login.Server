@@ -74,13 +74,13 @@ namespace Ice.Login.Service.Service.ClientService.UserMng
         }
         private async Task<bool> PassworldCalibration(string password)
         {
-            // 密码至少包含8个字符，包括至少一个大写字母、一个小写字母、一个数字和一个特殊字符
-            Regex regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+            Regex regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$");
             if (!regex.IsMatch(password))
             {
                 throw new KnownException("密码至少包含8个字符，包括至少一个大写字母、一个小写字母、一个数字和一个特殊字符", "10001");
             }
             return true;
+
         }
         public async Task<LoginResponse> Login(LoginRequest body)
         {
