@@ -1,5 +1,10 @@
 ﻿namespace Common.Error
 {
+    public static class ErrorCode
+    {
+        public const string UnknownError = "99999";
+        public const string AccountExists = "40001";
+    }
     public class KnownException : Exception, IKnownException
     {
         public readonly static IKnownException Unknown = new KnownException("unknown error", "99999");
