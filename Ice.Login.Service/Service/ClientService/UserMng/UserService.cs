@@ -26,8 +26,8 @@ namespace Ice.Login.Service.Service.ClientService.UserMng
             {
                 throw new KnownException("用户名已存在", "10001");
             }
-            await RegisterParameterCalibration(body.NickName, body.UserName, body.Password);
-            await PassworldCalibration(body.Password);
+            //await RegisterParameterCalibration(body.NickName, body.UserName, body.Password);
+            //await PassworldCalibration(body.Password);
             UserInfo user = new UserInfo()
             {
                 NickName = body.NickName,

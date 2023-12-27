@@ -7,6 +7,8 @@ using Ice.Login.Repository.Context;
 using Ice.Login.Repository.IRepository.Base;
 using Ice.Login.Service.Service.Base;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Text.Json;
@@ -72,6 +74,28 @@ builder.Services.AddDbContext<IceDbContext>(options =>
     ).UseLoggerFactory(LoggerFactory.Create(it => { })));
 
 builder.Services.AddScoped<DbContext, IceDbContext>();
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = actionContext =>
+    {
+        var errors = actionContext.ModelState
+            .Where(s => s.Value != null && s.Value.ValidationState == ModelValidationState.Invalid)
+            .SelectMany(s => s.Value!.Errors.ToList())
+            .Select(e => e.ErrorMessage)
+            .ToList();
+        var result = new ApiResult()
+        {
+            ErrorCode = StatusCodes.Status400BadRequest.ToString(),
+            Message = "Model validation fails",
+            Data = errors,
+            Success = false,
+            Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds().ToString()
+        };
+
+        return new BadRequestObjectResult(result);
+    };
+});
 
 var app = builder.Build();
 
