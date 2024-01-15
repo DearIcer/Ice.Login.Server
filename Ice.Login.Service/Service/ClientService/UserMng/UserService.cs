@@ -24,7 +24,7 @@ namespace Ice.Login.Service.Service.ClientService.UserMng
             UserInfo data = await _userInfoRepository.Queryable(it => it.UserName == body.UserName);
             if (data != null)
             {
-                throw new KnownException("用户名已存在", "10001");
+                throw new KnownException("用户名已存在", ErrorCode.AccountExists);
             }
             //await RegisterParameterCalibration(body.NickName, body.UserName, body.Password);
             //await PassworldCalibration(body.Password);
@@ -44,7 +44,7 @@ namespace Ice.Login.Service.Service.ClientService.UserMng
         {
             if (string.IsNullOrEmpty(nickName) || string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
             {
-                throw new KnownException("昵称、用户名或密码不能为空", "10001");
+                throw new KnownException("昵称、用户名或密码不能为空", ErrorCode.AccountError);
             }
 
             if (nickName.Length > 12 || password.Length > 16 || userName.Length > 16)
@@ -88,7 +88,7 @@ namespace Ice.Login.Service.Service.ClientService.UserMng
             it.Password == HashTools.MD5Encrypt32(body.Password));   
             if(userInfo == null)
             {
-                throw new KnownException("用户名或密码错误", "10001");
+                throw new KnownException("用户名或密码错误", ErrorCode.PasswordError);
             }
             return new LoginResponse() { UserName = userInfo.UserName,Token = Guid.NewGuid().ToString()};
         }

@@ -3,7 +3,9 @@
     public static class ErrorCode
     {
         public const string UnknownError = "99999";
+        public const string AccountError = "40000";
         public const string AccountExists = "40001";
+        public const string PasswordError = "40002";    
     }
     public class KnownException : Exception, IKnownException
     {
