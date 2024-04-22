@@ -1,8 +1,7 @@
 ﻿using Share;
 
-namespace Ice.Login.Service.Service.Base
+namespace Ice.Login.Service.Service.Base;
+
+internal interface IDbService : IUnitOfWork
 {
-    interface IDbService : IUnitOfWork
-    {
-    }
 }

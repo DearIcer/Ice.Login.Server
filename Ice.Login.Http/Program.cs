@@ -1,3 +1,6 @@
+using System.Reflection;
+using System.Text;
+using System.Text.Json;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -6,12 +9,12 @@ using Common.Model;
 using Ice.Login.Repository.Context;
 using Ice.Login.Repository.IRepository.Base;
 using Ice.Login.Service.Service.Base;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using System.Text.Json;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -26,10 +29,10 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddCors(options =>
     options.AddPolicy("Cors",
         cpBuilder =>
-        cpBuilder.SetIsOriginAllowed(t => true)
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials()
+            cpBuilder.SetIsOriginAllowed(t => true)
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
     )
 );
 builder.Services.AddAutoMapper(options =>
@@ -37,10 +40,7 @@ builder.Services.AddAutoMapper(options =>
     var assembly = Assembly.Load("Ice.Login.Http");
     var profileTypes = assembly.GetTypes()
         .Where(t => typeof(Profile).IsAssignableFrom(t));
-    foreach (var profileType in profileTypes)
-    {
-        options.AddProfile(profileType);
-    }
+    foreach (var profileType in profileTypes) options.AddProfile(profileType);
 });
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(containerBuilder =>
@@ -84,7 +84,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
             .SelectMany(s => s.Value!.Errors.ToList())
             .Select(e => e.ErrorMessage)
             .ToList();
-        var result = new ApiResult()
+        var result = new ApiResult
         {
             ErrorCode = StatusCodes.Status400BadRequest.ToString(),
             Message = "Model validation fails",
@@ -97,6 +97,22 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "yourIssuer",
+            ValidAudience = "yourAudience",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yourSecretKey"))
+        };
+    });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -104,15 +120,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
 }
 
 app.UseExceptionHandler(errApp =>
 {
     errApp.Run(async context =>
     {
-        IExceptionHandlerPathFeature exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>()!;
-        IKnownException? knownException = exceptionHandlerPathFeature.Error as IKnownException;
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>()!;
+        var knownException = exceptionHandlerPathFeature.Error as IKnownException;
         if (knownException == null)
         {
             var logger = context.RequestServices.GetService<ILogger<KnownException>>()!;
@@ -125,12 +140,13 @@ app.UseExceptionHandler(errApp =>
             knownException = KnownException.FromKnownException(knownException);
             context.Response.StatusCode = StatusCodes.Status200OK;
         }
+
         var options = new JsonSerializerOptions
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
         context.Response.ContentType = "application/json; charset=utf-8";
-        ApiResult rst = new ApiResult
+        var rst = new ApiResult
         {
             Success = false,
             Message = knownException.Message,

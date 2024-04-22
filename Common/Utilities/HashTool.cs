@@ -1,30 +1,27 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Common.Utilities
+namespace Common.Utilities;
+
+public static class HashTools
 {
-    public static class HashTools
+    public static string MD5Encrypt32(string input = "")
     {
-        public static string MD5Encrypt32(string input = "")
+        var pwd = string.Empty;
+        try
         {
-            string pwd = string.Empty;
-            try
+            if (!string.IsNullOrEmpty(input) && !string.IsNullOrWhiteSpace(input))
             {
-                if (!string.IsNullOrEmpty(input) && !string.IsNullOrWhiteSpace(input))
-                {
-                    MD5 md5 = MD5.Create();
-                    byte[] s = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
-                    foreach (var item in s)
-                    {
-                        pwd = string.Concat(pwd, item.ToString("X2"));
-                    }
-                }
+                var md5 = MD5.Create();
+                var s = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+                foreach (var item in s) pwd = string.Concat(pwd, item.ToString("X2"));
             }
-            catch
-            {
-                throw new Exception($"错误的 input 字符串:[{input}]");
-            }
-            return pwd;
         }
+        catch
+        {
+            throw new Exception($"错误的 input 字符串:[{input}]");
+        }
+
+        return pwd;
     }
 }

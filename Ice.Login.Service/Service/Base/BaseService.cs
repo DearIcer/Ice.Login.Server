@@ -1,9 +1,5 @@
-﻿namespace Ice.Login.Service.Service.Base
+﻿namespace Ice.Login.Service.Service.Base;
+
+public abstract class BaseService : IBaseService
 {
-    public abstract class BaseService : IBaseService
-    {
-    }
 }
-
-
-

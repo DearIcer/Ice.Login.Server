@@ -1,29 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>Ice.Login.Service.xml</DocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <DocumentationFile>Ice.Login.Service.xml</DocumentationFile>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <WarningLevel>0</WarningLevel>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <WarningLevel>0</WarningLevel>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <WarningLevel>0</WarningLevel>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <WarningLevel>0</WarningLevel>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="12.0.1"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Ice.Login.Repository\Ice.Login.Repository.csproj" />
-    <ProjectReference Include="..\Share\Share.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Common\Common.csproj"/>
+        <ProjectReference Include="..\Ice.Login.Repository\Ice.Login.Repository.csproj"/>
+        <ProjectReference Include="..\Share\Share.csproj"/>
+    </ItemGroup>
 
 </Project>

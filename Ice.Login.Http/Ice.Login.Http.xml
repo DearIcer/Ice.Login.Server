@@ -4,31 +4,29 @@
         <name>Ice.Login.Http</name>
     </assembly>
     <members>
-        <member name="T:Ice.Login.Http.Controllers.ClientApi.ClientApiController">
+        <member name="T:Ice.Login.Http.Controllers.ClientApi.AuthorController">
             <summary>
-            
             </summary>
             <param name="userService"></param>
         </member>
-        <member name="M:Ice.Login.Http.Controllers.ClientApi.ClientApiController.#ctor(Ice.Login.Service.Service.ClientService.UserMng.IUserService)">
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.AuthorController.#ctor(Ice.Login.Service.Service.ClientService.UserMng.IUserService)">
             <summary>
-            
             </summary>
             <param name="userService"></param>
         </member>
-        <member name="M:Ice.Login.Http.Controllers.ClientApi.ClientApiController.Get">
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.AuthorController.Get">
             <summary>
-            TestGet
+                TestGet
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Ice.Login.Http.Controllers.ClientApi.ClientApiController.Register(Ice.Login.Service.Service.ClientService.UserMng.RegisterAccountRequest)">
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.AuthorController.Register(Ice.Login.Service.Service.ClientService.UserMng.RegisterAccountRequest)">
             <summary>
-            注册账号
+                注册账号
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Ice.Login.Http.Controllers.ClientApi.ClientApiController.Login(Ice.Login.Service.Service.ClientService.UserMng.LoginRequest)">
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.AuthorController.Login(Ice.Login.Service.Service.ClientService.UserMng.LoginRequest)">
             <summary>
             登录接口
             </summary>

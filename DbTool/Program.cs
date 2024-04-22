@@ -13,21 +13,22 @@ try
             case 1:
                 var serverVersion = new MySqlServerVersion(new Version(5, 7, 26));
                 options = new DbContextOptionsBuilder<IceDbContext>()
-                            .UseMySql(@"Server=localhost;Database=IceLoginDb;Uid=root;Pwd=root;",serverVersion).Options;
+                    .UseMySql(@"Server=localhost;Database=IceLoginDb;Uid=root;Pwd=root;", serverVersion).Options;
                 init(options);
                 break;
             case 2:
                 options = new DbContextOptionsBuilder<IceDbContext>()
-                    .UseSqlServer(@"Server=localhost;Database=IceLoginDb;User Id=sa;Password=123456;TrustServerCertificate=True").Options;
+                    .UseSqlServer(
+                        @"Server=localhost;Database=IceLoginDb;User Id=sa;Password=123456;TrustServerCertificate=True")
+                    .Options;
                 init(options);
                 break;
             default:
                 continue;
         }
     }
-   
 }
-catch (Exception ex )
+catch (Exception ex)
 {
     Console.WriteLine(ex);
     throw;

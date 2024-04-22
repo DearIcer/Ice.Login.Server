@@ -1,19 +1,13 @@
-﻿using Ice.Login.Entity.Backend;
+﻿using System.Linq.Expressions;
+using Ice.Login.Entity.Backend;
 using Ice.Login.Repository.IRepository.Base;
 using Share;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Ice.Login.Repository.IRepository.ClientRepository.UserMng
+namespace Ice.Login.Repository.IRepository.ClientRepository.UserMng;
+
+public interface IUserInfoRepository : IBaseRepository, IUnitOfWork
 {
-    public interface IUserInfoRepository : IBaseRepository, IUnitOfWork
-    {
-        Task<UserInfo> Queryable(Expression<Func<UserInfo, bool>> whereExpression);
+    Task<UserInfo> Queryable(Expression<Func<UserInfo, bool>> whereExpression);
 
-        Task<bool> Create(UserInfo userInfo);
-    }
+    Task<bool> Create(UserInfo userInfo);
 }
