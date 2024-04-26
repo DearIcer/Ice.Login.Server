@@ -38,8 +38,4 @@
         <ProjectReference Include="..\Ice.Login.Service\Ice.Login.Service.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Common\" />
-    </ItemGroup>
-
 </Project>

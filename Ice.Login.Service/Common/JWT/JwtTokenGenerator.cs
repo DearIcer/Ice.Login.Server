@@ -7,10 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Ice.Login.Service.Common.JWT;
 
-
 public static class JwtTokenGenerator
 {
     private static readonly string SecretKey = "B7FC4838F5A36C8D1940B56FE2DF734293434DA17CCA35A4E3F82D66EAD6AA0D";
+
     public static string GenerateToken(string userId, string userName, string secretKey)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -19,15 +19,15 @@ public static class JwtTokenGenerator
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, userId),
-                new Claim(ClaimTypes.NameIdentifier, userName)
+                new(ClaimTypes.Name, userId),
+                new(ClaimTypes.NameIdentifier, userName)
             }),
-            Expires = DateTime.UtcNow.AddHours(1),
+            Expires = DateTime.UtcNow.AddHours(1)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
-    
+
     public static TokenResult GenerateToken(UserInfo userInfo)
     {
         // 生成时间戳
@@ -42,12 +42,13 @@ public static class JwtTokenGenerator
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, userInfo.UserName),
+                new(ClaimTypes.Name, userInfo.UserName),
                 // 添加其他必要声明
-                new Claim("timestamp", timestamp.ToString()) // 如果需要，添加时间戳声明
+                new("timestamp", timestamp.ToString()) // 如果需要，添加时间戳声明
             }),
             Expires = DateTime.UtcNow.AddHours(1), // 设置令牌过期时间
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey)), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey)),
+                SecurityAlgorithms.HmacSha256Signature)
         };
 
         // 计算签名
@@ -64,13 +65,13 @@ public static class JwtTokenGenerator
 
         // **生成刷新令牌**
         // 1. 为刷新令牌定义一个唯一标识符
-        Guid refreshTokenId = Guid.NewGuid();
+        var refreshTokenId = Guid.NewGuid();
 
         // 2. 生成一个安全随机字符串作为刷新令牌的实际值
-        string refreshTokenValue = GenerateSecureRandomString(32); // 实现GenerateSecureRandomString()方法
+        var refreshTokenValue = GenerateSecureRandomString(32); // 实现GenerateSecureRandomString()方法
 
         // 3. 可选地，为刷新令牌设置过期时间（例如，7天）
-        DateTime refreshTokenExpiration = DateTime.UtcNow.AddDays(7);
+        var refreshTokenExpiration = DateTime.UtcNow.AddDays(7);
 
         // **将令牌存储在数据库或缓存中以供后续使用（如刷新令牌、令牌撤销）**
         // 您可以在这里添加自己的逻辑来存储和管理令牌
@@ -78,7 +79,7 @@ public static class JwtTokenGenerator
         // - 将刷新令牌详细信息（refreshTokenId, refreshTokenValue, refreshTokenExpiration, userInfo.UserId）保存到数据库中
         // - 将生成的JWT令牌与refreshTokenId关联起来，以便在令牌验证期间轻松查找
 
-        TokenResult tokenResult = new TokenResult
+        var tokenResult = new TokenResult
         {
             Token = tokenString,
             RefreshToken = refreshTokenValue
@@ -96,17 +97,17 @@ public static class JwtTokenGenerator
 }
 
 /// <summary>
-/// 令牌结果
+///     令牌结果
 /// </summary>
 public class TokenResult
 {
     /// <summary>
-    /// 令牌
+    ///     令牌
     /// </summary>
     public string Token { get; set; }
-    
+
     /// <summary>
-    /// 刷新令牌
+    ///     刷新令牌
     /// </summary>
     public string RefreshToken { get; set; }
 }

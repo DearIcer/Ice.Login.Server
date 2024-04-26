@@ -6,6 +6,7 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Common.Error;
 using Common.Model;
+using Ice.Login.Http.Middleware;
 using Ice.Login.Repository.Context;
 using Ice.Login.Repository.IRepository.Base;
 using Ice.Login.Service.Service.Base;
@@ -97,6 +98,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
+builder.Services.AddLogging();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -114,6 +117,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 var app = builder.Build();
+
+
+
+app.UseMiddleware<RequestMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

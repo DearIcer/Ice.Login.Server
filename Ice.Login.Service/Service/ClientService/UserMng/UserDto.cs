@@ -59,7 +59,7 @@ public class LoginResponse
     /// </summary>
     [Required]
     public string accessToken { get; set; }
-    
+
     /// <summary>
     ///     刷新token
     /// </summary>

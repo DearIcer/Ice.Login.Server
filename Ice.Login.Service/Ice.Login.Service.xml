@@ -6,17 +6,17 @@
     <members>
         <member name="T:Ice.Login.Service.Common.JWT.TokenResult">
             <summary>
-            令牌结果
+                令牌结果
             </summary>
         </member>
         <member name="P:Ice.Login.Service.Common.JWT.TokenResult.Token">
             <summary>
-            令牌
+                令牌
             </summary>
         </member>
         <member name="P:Ice.Login.Service.Common.JWT.TokenResult.RefreshToken">
             <summary>
-            刷新令牌
+                刷新令牌
             </summary>
         </member>
         <member name="T:Ice.Login.Service.Service.ClientService.UserMng.RegisterAccountRequest">
