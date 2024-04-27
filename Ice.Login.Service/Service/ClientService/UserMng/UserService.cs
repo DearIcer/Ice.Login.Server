@@ -1,4 +1,5 @@
 ﻿using Common.Error;
+using Common.Model;
 using Common.Utilities;
 using Ice.Login.Entity.Backend;
 using Ice.Login.Repository.IRepository.ClientRepository.UserMng;
@@ -45,10 +46,16 @@ public class UserService(
         if (userInfo == null) throw new KnownException("用户名或密码错误", ErrorCode.PasswordError);
 
         var token = jwtTokenGenerator.GenerateToken(userInfo);
+        var sessionModel = new SessionModel
+        {
+            UserId = userInfo.Id,
+            ExpirationTime = DateTime.UtcNow.AddMinutes(60)
+        };
+        cache.Set(userInfo.Id, sessionModel, TimeSpan.FromMinutes(60));
         return new LoginResponse
             { UserName = userInfo.UserName, accessToken = token.Token, RefreshToken = token.RefreshToken };
     }
-
+    
     public async Task<LoginResponse> RefreshToken(string refreshToken)
     {
         long userId = 0;
@@ -57,7 +64,14 @@ public class UserService(
 
         var userInfo = await userInfoRepository.Queryable(info => info.Id == userId);
         if (userInfo == null) throw new KnownException("用户不存在", ErrorCode.UserNotExists);
+        cache.Remove(refreshToken);
         var token = jwtTokenGenerator.GenerateToken(userInfo);
+        var sessionModel = new SessionModel
+        {
+            UserId = userInfo.Id,
+            ExpirationTime = DateTime.UtcNow.AddMinutes(60)
+        };
+        cache.Set(userInfo.Id, sessionModel, TimeSpan.FromMinutes(60));
         return new LoginResponse
             { UserName = userInfo.UserName, accessToken = token.Token, RefreshToken = token.RefreshToken };
     }

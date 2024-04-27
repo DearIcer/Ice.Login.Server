@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Ice.Login.Service.Common.JWT;
 
-public class JwtTokenGenerator(JwtTokenConfig jwtTokenConfig,IMemoryCache cache) : IJwtTokenGenerator
+public class JwtTokenGenerator(JwtTokenConfig jwtTokenConfig, IMemoryCache cache) : IJwtTokenGenerator
 {
     private readonly string _secretKey = jwtTokenConfig.Secret;
 
@@ -44,14 +44,14 @@ public class JwtTokenGenerator(JwtTokenConfig jwtTokenConfig,IMemoryCache cache)
             Subject = new ClaimsIdentity(new Claim[]
             {
                 new(ClaimTypes.Name, userInfo.UserName),
-                // 添加其他必要声明
-                new("timestamp", timestamp.ToString()) // 如果需要，添加时间戳声明
+                new("timestamp", timestamp.ToString()),
+                new(ClaimTypes.NameIdentifier, userInfo.Id.ToString())
             }),
             Expires = DateTime.UtcNow.AddHours(1), // 设置令牌过期时间
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
                 SecurityAlgorithms.HmacSha256Signature),
             Audience = jwtTokenConfig.Audience,
-            Issuer = jwtTokenConfig.Issuer,
+            Issuer = jwtTokenConfig.Issuer
         };
 
         // 计算签名

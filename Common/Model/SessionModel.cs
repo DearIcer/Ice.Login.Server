@@ -1,7 +1,7 @@
-namespace Ice.Login.Http.Common;
+namespace Common.Model;
 
 public class SessionModel
 {
-    public string UserId { get; set; }
+    public long UserId { get; set; }
     public DateTime ExpirationTime { get; set; }
 }

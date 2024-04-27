@@ -1,5 +1,4 @@
 using Ice.Login.Entity.Backend;
-using Ice.Login.Service.Service.Base;
 
 namespace Ice.Login.Service.Common.JWT;
 

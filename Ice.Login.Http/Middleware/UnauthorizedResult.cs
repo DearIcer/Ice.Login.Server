@@ -1,4 +1,4 @@
-using Ice.Login.Http.Common;
+using Common.Model;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Ice.Login.Http.Middleware;
