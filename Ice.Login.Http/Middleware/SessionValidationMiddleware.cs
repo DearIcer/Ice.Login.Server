@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Common.Model;
 using Ice.Login.Service.Common.JWT;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
@@ -17,6 +18,20 @@ public class SessionValidationMiddleware(
 {
     public async Task Invoke(HttpContext context)
     {
+        var endpoint = context.GetEndpoint();
+        if (endpoint?.Metadata.GetMetadata<IAllowAnonymous>() != null)
+        {
+            await next(context);
+            return;
+        }
+        // 放行swagger
+        if (context.Request.Path.StartsWithSegments("/swagger") ||
+            context.Request.Path.StartsWithSegments("/swagger-ui") ||
+            context.Request.Path.StartsWithSegments("/swagger/v1/swagger.json"))
+        {
+            await next(context);
+            return;
+        }
         var authorizationHeader = context.Request.Headers["Authorization"].FirstOrDefault();
 
         if (string.IsNullOrEmpty(authorizationHeader) ||

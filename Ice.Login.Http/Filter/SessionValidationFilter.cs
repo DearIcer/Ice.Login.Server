@@ -17,6 +17,14 @@ public class SessionValidationFilter(
 {
     public override void OnActionExecuting(ActionExecutingContext context)
     {
+        // 放行swagger
+        if (context.HttpContext.Request.Path.StartsWithSegments("/swagger")||
+            context.HttpContext.Request.Path.StartsWithSegments("/swagger-ui")||
+            context.HttpContext.Request.Path.StartsWithSegments("/swagger/v1/swagger.json"))
+        {
+            return;
+        }
+        
         // 从请求头 "Authorization" 中提取 JWT 令牌
         var authorizationHeader = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 

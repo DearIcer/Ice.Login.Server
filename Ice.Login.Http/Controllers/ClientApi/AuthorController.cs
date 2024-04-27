@@ -1,6 +1,7 @@
 ﻿using Common.Error;
 using Common.Model;
 using Ice.Login.Http.Controllers.Base;
+using Ice.Login.Http.Filter;
 using Ice.Login.Service.Service.ClientService.UserMng;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ public class AuthorController(IUserService userService) : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ApiResult> Get()
     {
         throw new KnownException("Test", "Test", 500);
@@ -54,7 +56,7 @@ public class AuthorController(IUserService userService) : BaseController
     /// <returns></returns>
     [HttpPost]
     [Authorize]
-    //[TypeFilter(typeof(SessionValidationFilter))] // 使用过滤器验证会话
+    // [TypeFilter(typeof(SessionValidationFilter))] // 使用过滤器验证会话
     public async Task<ApiResult> RefreshToken([FromBody] RefreshTokenRequest body)
     {
         var data = await userService.RefreshToken(body.RefreshToken);
