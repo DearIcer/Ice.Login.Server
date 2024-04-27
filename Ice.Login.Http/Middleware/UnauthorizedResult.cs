@@ -3,13 +3,10 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Ice.Login.Http.Middleware;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
-
 public class SessionValidationMiddleware
 {
-    private readonly RequestDelegate _next;
     private readonly IMemoryCache _cache;
+    private readonly RequestDelegate _next;
 
     public SessionValidationMiddleware(RequestDelegate next, IMemoryCache cache)
     {
@@ -19,7 +16,8 @@ public class SessionValidationMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        if (!_cache.TryGetValue(context.Request.Cookies["userId"], out SessionModel session) || session.ExpirationTime < DateTime.UtcNow)
+        if (!_cache.TryGetValue(context.Request.Cookies["userId"], out SessionModel session) ||
+            session.ExpirationTime < DateTime.UtcNow)
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             return;

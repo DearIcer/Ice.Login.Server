@@ -4,10 +4,15 @@ using Ice.Login.Entity.Backend;
 using Ice.Login.Repository.IRepository.ClientRepository.UserMng;
 using Ice.Login.Service.Common.JWT;
 using Ice.Login.Service.Service.Base;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Ice.Login.Service.Service.ClientService.UserMng;
 
-public class UserService(IUserInfoRepository userInfoRepository) : DbService(userInfoRepository), IUserService
+public class UserService(
+    IUserInfoRepository userInfoRepository,
+    IMemoryCache cache,
+    IJwtTokenGenerator jwtTokenGenerator)
+    : DbService(userInfoRepository), IUserService
 {
     public async Task<UserInfo> Queryable()
     {
@@ -39,8 +44,20 @@ public class UserService(IUserInfoRepository userInfoRepository) : DbService(use
                                                                 it.Password == HashTools.MD5Encrypt32(body.Password));
         if (userInfo == null) throw new KnownException("用户名或密码错误", ErrorCode.PasswordError);
 
+        var token = jwtTokenGenerator.GenerateToken(userInfo);
+        return new LoginResponse
+            { UserName = userInfo.UserName, accessToken = token.Token, RefreshToken = token.RefreshToken };
+    }
 
-        var token = JwtTokenGenerator.GenerateToken(userInfo);
+    public async Task<LoginResponse> RefreshToken(string refreshToken)
+    {
+        long userId = 0;
+        if (!cache.TryGetValue(refreshToken, out userId))
+            throw new KnownException("refreshToken无效", ErrorCode.RefreshTokenInvalid);
+
+        var userInfo = await userInfoRepository.Queryable(info => info.Id == userId);
+        if (userInfo == null) throw new KnownException("用户不存在", ErrorCode.UserNotExists);
+        var token = jwtTokenGenerator.GenerateToken(userInfo);
         return new LoginResponse
             { UserName = userInfo.UserName, accessToken = token.Token, RefreshToken = token.RefreshToken };
     }

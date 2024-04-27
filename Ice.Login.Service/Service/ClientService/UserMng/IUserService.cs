@@ -10,4 +10,6 @@ public interface IUserService : IBaseService
     Task<bool> RegisterAccount(RegisterAccountRequest body);
 
     Task<LoginResponse> Login(LoginRequest body);
+
+    Task<LoginResponse> RefreshToken(string refreshToken);
 }

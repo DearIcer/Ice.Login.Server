@@ -65,3 +65,12 @@ public class LoginResponse
     /// </summary>
     public string RefreshToken { get; set; }
 }
+
+public class RefreshTokenRequest
+{
+    /// <summary>
+    ///     刷新token
+    /// </summary>
+    [Required]
+    public string RefreshToken { get; set; }
+}

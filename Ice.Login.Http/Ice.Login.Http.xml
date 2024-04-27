@@ -33,27 +33,34 @@
             <param name="body"></param>
             <returns></returns>
         </member>
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.AuthorController.RefreshToken(Ice.Login.Service.Service.ClientService.UserMng.RefreshTokenRequest)">
+            <summary>
+                刷新token
+            </summary>
+            <param name="body"></param>
+            <returns></returns>
+        </member>
         <member name="T:Ice.Login.Http.Middleware.RequestMiddleware">
             <summary>
-            请求中间件类，用于处理HTTP请求并获取客户端IP地址。
+                请求中间件类，用于处理HTTP请求并获取客户端IP地址。
             </summary>
         </member>
         <member name="M:Ice.Login.Http.Middleware.RequestMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{Ice.Login.Http.Middleware.RequestMiddleware})">
             <summary>
-            构造函数。
+                构造函数。
             </summary>
             <param name="next">下一个中间件或终端处理程序的委托。</param>
         </member>
         <member name="M:Ice.Login.Http.Middleware.RequestMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
             <summary>
-            处理HTTP请求的入口点。
+                处理HTTP请求的入口点。
             </summary>
             <param name="context">HTTP上下文，包含请求和响应的信息。</param>
             <returns>异步任务，表示请求处理的过程。</returns>
         </member>
         <member name="M:Ice.Login.Http.Middleware.RequestMiddleware.GetClientIpAddress(Microsoft.AspNetCore.Http.HttpContext)">
             <summary>
-            获取客户端的IP地址。
+                获取客户端的IP地址。
             </summary>
             <param name="context">HTTP上下文。</param>
             <returns>客户端的IP地址，如果无法获取则返回"Unknown"。</returns>

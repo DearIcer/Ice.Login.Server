@@ -64,5 +64,10 @@
                 刷新token
             </summary>
         </member>
+        <member name="P:Ice.Login.Service.Service.ClientService.UserMng.RefreshTokenRequest.RefreshToken">
+            <summary>
+                刷新token
+            </summary>
+        </member>
     </members>
 </doc>

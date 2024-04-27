@@ -9,6 +9,7 @@ using Common.Model;
 using Ice.Login.Http.Middleware;
 using Ice.Login.Repository.Context;
 using Ice.Login.Repository.IRepository.Base;
+using Ice.Login.Service.Common.JWT;
 using Ice.Login.Service.Service.Base;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
@@ -16,17 +17,47 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddSwaggerGen(options =>
+if (builder.Environment.IsDevelopment())
 {
-    var basePath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
-    var xmlFiles = new DirectoryInfo(basePath).GetFiles().Where(x => x.Name.Contains(".xml")).ToList();
-    xmlFiles.ForEach(x => options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, x.Name), true));
-});
+    builder.Services.AddSwaggerGen(options =>
+    {
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please insert JWT with Bearer into field",
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+        });
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[] { }
+            }
+        });
+    });
+    builder.Services.AddSwaggerGen(options =>
+    {
+        var basePath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+        var xmlFiles = new DirectoryInfo(basePath).GetFiles().Where(x => x.Name.Contains(".xml")).ToList();
+        xmlFiles.ForEach(x => options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, x.Name), true));
+    });
+}
+
+builder.Services.AddMemoryCache();
 builder.Services.AddCors(options =>
     options.AddPolicy("Cors",
         cpBuilder =>
@@ -43,6 +74,10 @@ builder.Services.AddAutoMapper(options =>
         .Where(t => typeof(Profile).IsAssignableFrom(t));
     foreach (var profileType in profileTypes) options.AddProfile(profileType);
 });
+builder.Services.AddDbContext<IceDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
+    ).UseLoggerFactory(LoggerFactory.Create(it => { })));
+
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(containerBuilder =>
     {
@@ -62,19 +97,6 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
             .InstancePerLifetimeScope();
     });
-
-//builder.Services.AddDbContext<IceDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
-//    //options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-//    //                 new MySqlServerVersion(new Version(5, 7, 26)))
-
-//    ));
-
-builder.Services.AddDbContext<IceDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
-    ).UseLoggerFactory(LoggerFactory.Create(it => { })));
-
-builder.Services.AddScoped<DbContext, IceDbContext>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -99,8 +121,16 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 builder.Services.AddLogging();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+var jwt = builder.Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>()!;
+builder.Services.AddSingleton(jwt);
+// builder.Services.AddAutofac(x =>
+//     x.RegisterType<JwtTokenConfig>());
+builder.Services.AddAuthentication(x =>
+    {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -109,16 +139,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "yourIssuer",
-            ValidAudience = "yourAudience",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yourSecretKey"))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwt.Secret)),
+            ValidIssuer = jwt.Issuer,
+            ValidAudience = jwt.Audience,
+            ClockSkew = TimeSpan.Zero
         };
     });
 
 
 var app = builder.Build();
-
-
 
 app.UseMiddleware<RequestMiddleware>();
 
@@ -168,6 +197,7 @@ app.UseExceptionHandler(errApp =>
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

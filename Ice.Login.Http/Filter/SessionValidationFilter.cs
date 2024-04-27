@@ -1,10 +1,9 @@
 using Ice.Login.Http.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Ice.Login.Http.Filter;
-
-using Microsoft.AspNetCore.Mvc.Filters;
 
 public class SessionValidationFilter : ActionFilterAttribute
 {
@@ -19,7 +18,8 @@ public class SessionValidationFilter : ActionFilterAttribute
     {
         // 在此处从请求中提取用户ID（实际逻辑取决于您的会话管理方式）
 
-        if (!_cache.TryGetValue(context.HttpContext.Request.Cookies["userId"], out SessionModel session) || session.ExpirationTime < DateTime.UtcNow)
+        if (!_cache.TryGetValue(context.HttpContext.Request.Cookies["userId"], out SessionModel session) ||
+            session.ExpirationTime < DateTime.UtcNow)
         {
             context.Result = new UnauthorizedResult();
             return;

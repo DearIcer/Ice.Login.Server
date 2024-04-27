@@ -3,15 +3,16 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Ice.Login.Entity.Backend;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Ice.Login.Service.Common.JWT;
 
-public static class JwtTokenGenerator
+public class JwtTokenGenerator(JwtTokenConfig jwtTokenConfig,IMemoryCache cache) : IJwtTokenGenerator
 {
-    private static readonly string SecretKey = "B7FC4838F5A36C8D1940B56FE2DF734293434DA17CCA35A4E3F82D66EAD6AA0D";
+    private readonly string _secretKey = jwtTokenConfig.Secret;
 
-    public static string GenerateToken(string userId, string userName, string secretKey)
+    public string GenerateToken(string userId, string userName, string secretKey)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(secretKey);
@@ -28,7 +29,7 @@ public static class JwtTokenGenerator
         return tokenHandler.WriteToken(token);
     }
 
-    public static TokenResult GenerateToken(UserInfo userInfo)
+    public TokenResult GenerateToken(UserInfo userInfo)
     {
         // 生成时间戳
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -47,12 +48,14 @@ public static class JwtTokenGenerator
                 new("timestamp", timestamp.ToString()) // 如果需要，添加时间戳声明
             }),
             Expires = DateTime.UtcNow.AddHours(1), // 设置令牌过期时间
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey)),
-                SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
+                SecurityAlgorithms.HmacSha256Signature),
+            Audience = jwtTokenConfig.Audience,
+            Issuer = jwtTokenConfig.Issuer,
         };
 
         // 计算签名
-        var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(SecretKey));
+        var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(_secretKey));
         var signatureBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(payload));
         var signature = Convert.ToBase64String(signatureBytes);
 
@@ -64,20 +67,16 @@ public static class JwtTokenGenerator
         var tokenString = tokenHandler.WriteToken(token);
 
         // **生成刷新令牌**
-        // 1. 为刷新令牌定义一个唯一标识符
-        var refreshTokenId = Guid.NewGuid();
+        // 1. 生成一个安全随机字符串作为刷新令牌的实际值
+        var refreshTokenValue = GenerateSecureRandomString(32);
 
-        // 2. 生成一个安全随机字符串作为刷新令牌的实际值
-        var refreshTokenValue = GenerateSecureRandomString(32); // 实现GenerateSecureRandomString()方法
-
-        // 3. 可选地，为刷新令牌设置过期时间（例如，7天）
-        var refreshTokenExpiration = DateTime.UtcNow.AddDays(7);
+        // 2. 可选地，为刷新令牌设置过期时间（例如，2小时）
+        var refreshTokenExpiration = TimeSpan.FromMinutes(55);
 
         // **将令牌存储在数据库或缓存中以供后续使用（如刷新令牌、令牌撤销）**
-        // 您可以在这里添加自己的逻辑来存储和管理令牌
         // 例如：
-        // - 将刷新令牌详细信息（refreshTokenId, refreshTokenValue, refreshTokenExpiration, userInfo.UserId）保存到数据库中
-        // - 将生成的JWT令牌与refreshTokenId关联起来，以便在令牌验证期间轻松查找
+        // - 将令牌存储到缓存
+        cache.Set(refreshTokenValue, userInfo.Id, refreshTokenExpiration);
 
         var tokenResult = new TokenResult
         {

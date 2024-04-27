@@ -2,6 +2,7 @@
 using Common.Model;
 using Ice.Login.Http.Controllers.Base;
 using Ice.Login.Service.Service.ClientService.UserMng;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ice.Login.Http.Controllers.ClientApi;
@@ -41,6 +42,19 @@ public class AuthorController(IUserService userService) : BaseController
     public async Task<ApiResult> Login([FromBody] LoginRequest body)
     {
         var data = await userService.Login(body);
+        return Response(data);
+    }
+
+    /// <summary>
+    ///     刷新token
+    /// </summary>
+    /// <param name="body"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Authorize]
+    public async Task<ApiResult> RefreshToken([FromBody] RefreshTokenRequest body)
+    {
+        var data = await userService.RefreshToken(body.RefreshToken);
         return Response(data);
     }
 }
