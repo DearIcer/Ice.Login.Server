@@ -149,7 +149,10 @@ builder.Services.AddAuthentication(x =>
 var app = builder.Build();
 
 app.UseMiddleware<RequestMiddleware>();
-app.UseMiddleware<SessionValidationMiddleware>();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseMiddleware<SessionValidationMiddleware>();
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
