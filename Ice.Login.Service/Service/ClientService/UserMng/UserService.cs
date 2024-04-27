@@ -55,7 +55,7 @@ public class UserService(
         return new LoginResponse
             { UserName = userInfo.UserName, accessToken = token.Token, RefreshToken = token.RefreshToken };
     }
-    
+
     public async Task<LoginResponse> RefreshToken(string refreshToken)
     {
         long userId = 0;

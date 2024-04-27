@@ -6,7 +6,6 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Common.Error;
 using Common.Model;
-using Ice.Login.Http.Filter;
 using Ice.Login.Http.Middleware;
 using Ice.Login.Repository.Context;
 using Ice.Login.Repository.IRepository.Base;
@@ -150,7 +149,7 @@ builder.Services.AddAuthentication(x =>
 var app = builder.Build();
 
 app.UseMiddleware<RequestMiddleware>();
-
+app.UseMiddleware<SessionValidationMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

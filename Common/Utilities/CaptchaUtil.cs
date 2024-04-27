@@ -1,7 +1,7 @@
 ﻿using SkiaSharp;
 
 namespace Common.Utilities;
-
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
 /// <summary>
 ///     Captcha
 /// </summary>
@@ -129,7 +129,7 @@ public static class CaptchaUtil
 
         return new CaptchaResult
         {
-            CaptchaGUID = Guid.NewGuid().ToString().ToUpper(), CaptchaCode = captchaCode, CaptchaMemoryStream = ms,
+            CaptchaGuid = Guid.NewGuid().ToString().ToUpper(), CaptchaCode = captchaCode, CaptchaMemoryStream = ms,
             Timestamp = DateTime.Now
         };
     }
@@ -142,7 +142,7 @@ public static class CaptchaUtil
         /// <summary>
         ///     CaptchaGUID
         /// </summary>
-        public string CaptchaGUID { get; set; }
+        public string CaptchaGuid { get; set; }
 
         /// <summary>
         ///     CaptchaCode
@@ -158,5 +158,6 @@ public static class CaptchaUtil
         ///     Timestamp
         /// </summary>
         public DateTime Timestamp { get; set; }
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
     }
 }

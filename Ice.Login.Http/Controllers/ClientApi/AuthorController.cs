@@ -1,7 +1,6 @@
 ﻿using Common.Error;
 using Common.Model;
 using Ice.Login.Http.Controllers.Base;
-using Ice.Login.Http.Filter;
 using Ice.Login.Service.Service.ClientService.UserMng;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +27,7 @@ public class AuthorController(IUserService userService) : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpPost]
+    [AllowAnonymous]
     public async Task<ApiResult> Register([FromBody] RegisterAccountRequest body)
     {
         var data = await userService.RegisterAccount(body);
@@ -40,6 +40,7 @@ public class AuthorController(IUserService userService) : BaseController
     /// <param name="body"></param>
     /// <returns></returns>
     [HttpPost]
+    [AllowAnonymous]
     public async Task<ApiResult> Login([FromBody] LoginRequest body)
     {
         var data = await userService.Login(body);
@@ -53,7 +54,7 @@ public class AuthorController(IUserService userService) : BaseController
     /// <returns></returns>
     [HttpPost]
     [Authorize]
-    [TypeFilter(typeof(SessionValidationFilter))]
+    //[TypeFilter(typeof(SessionValidationFilter))] // 使用过滤器验证会话
     public async Task<ApiResult> RefreshToken([FromBody] RefreshTokenRequest body)
     {
         var data = await userService.RefreshToken(body.RefreshToken);
