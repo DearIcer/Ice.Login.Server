@@ -15,8 +15,9 @@ public class UserInfoRepository(IceDbContext dbContext) : DbRepository(dbContext
         return await DbContext.SaveChangesAsync() > 0;
     }
 
-    public async Task<UserInfo> Queryable(Expression<Func<UserInfo, bool>> whereExpression)
+    public async Task<UserInfo> GetUserinfo(Expression<Func<UserInfo, bool>> whereExpression)
     {
+        return await Queryable(whereExpression);
         return await DbContext.UserInfo.AsQueryable().Where(whereExpression).FirstOrDefaultAsync();
     }
 }

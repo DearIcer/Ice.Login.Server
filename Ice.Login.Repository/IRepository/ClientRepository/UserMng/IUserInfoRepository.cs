@@ -7,7 +7,7 @@ namespace Ice.Login.Repository.IRepository.ClientRepository.UserMng;
 
 public interface IUserInfoRepository : IBaseRepository, IUnitOfWork
 {
-    Task<UserInfo> Queryable(Expression<Func<UserInfo, bool>> whereExpression);
+    Task<UserInfo> GetUserinfo(Expression<Func<UserInfo, bool>> whereExpression);
 
     Task<bool> Create(UserInfo userInfo);
 }

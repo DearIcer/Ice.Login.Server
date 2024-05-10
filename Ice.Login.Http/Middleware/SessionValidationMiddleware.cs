@@ -24,6 +24,7 @@ public class SessionValidationMiddleware(
             await next(context);
             return;
         }
+
         // 放行swagger
         if (context.Request.Path.StartsWithSegments("/swagger") ||
             context.Request.Path.StartsWithSegments("/swagger-ui") ||
@@ -32,6 +33,7 @@ public class SessionValidationMiddleware(
             await next(context);
             return;
         }
+
         var authorizationHeader = context.Request.Headers["Authorization"].FirstOrDefault();
 
         if (string.IsNullOrEmpty(authorizationHeader) ||
