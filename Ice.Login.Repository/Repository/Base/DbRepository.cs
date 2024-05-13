@@ -1,44 +1,86 @@
 ﻿using System.Linq.Expressions;
 using Ice.Login.Repository.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
+#pragma warning disable CS8603 // 可能返回 null 引用。
 
 namespace Ice.Login.Repository.Repository.Base;
 
-public class DbRepository(IceDbContext dbContext) : BaseRepository<IceDbContext>(dbContext)
+public class DbRepository(IceDbContext dbContext,ILogger<DbRepository> logger) : BaseRepository<IceDbContext>(dbContext)
 {
     public override async Task<int> SaveChangesAsync()
     {
         return await DbContext.SaveChangesAsync();
     }
 
-    public override async Task<T> Queryable<T>(Expression<Func<T, bool>> whereExpression,
-        params Expression<Func<T, object>>[] includes)
+    private IQueryable<T> BuildQuery<T>(Expression<Func<T, bool>> whereExpression,
+        IEnumerable<Expression<Func<T, object>>> includes) where T : class
     {
         var query = DbContext.Set<T>().Where(whereExpression);
         foreach (var include in includes) query = query.Include(include);
-        return await query.FirstOrDefaultAsync();
+        return query;
+    }
+    
+    public override async Task<T> Queryable<T>(Expression<Func<T, bool>> whereExpression,
+        params Expression<Func<T, object>>[] includes)
+    {
+        try
+        {
+            var query = BuildQuery<T>(whereExpression, includes);
+            return await query.FirstOrDefaultAsync();
+        }
+        catch (Exception e)
+        {
+            LogError(e);
+            throw;
+        }
     }
 
     public override async Task<List<T>> QueryableList<T>(Expression<Func<T, bool>> whereExpression,
         params Expression<Func<T, object>>[] includes)
     {
-        var query = DbContext.Set<T>().Where(whereExpression);
-        foreach (var include in includes) query = query.Include(include);
-        return await query.ToListAsync();
+        try
+        {
+            var query = BuildQuery<T>(whereExpression, includes);
+            return await query.ToListAsync();
+        }
+        catch (Exception e)
+        {
+            LogError(e);
+            throw;
+        }
     }
 
     public override async Task<(List<T> Data, int TotalCount)> GetPagedDataAsync<T>(
         Expression<Func<T, bool>> whereExpression, int pageIndex, int pageSize,
         params Expression<Func<T, object>>[] includes)
     {
-        var totalCount = await DbContext.Set<T>().CountAsync(whereExpression);
-        var query = DbContext.Set<T>().Where(whereExpression);
-        foreach (var include in includes) query = query.Include(include);
-        var data = await query
-            .Skip((pageIndex - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+        if (pageIndex < 1 || pageSize <= 0)
+        {
+            throw new ArgumentException("Invalid pageIndex or pageSize values.");
+        }
+        try
+        {
+            var totalCount = await DbContext.Set<T>().CountAsync(whereExpression);
+            var query = BuildQuery<T>(whereExpression, includes);
+            var data = await query
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-        return (data, totalCount);
+            return (data, totalCount);
+        }
+        catch (Exception e)
+        {
+            LogError(e);
+            throw;
+        }
+    }
+
+    private void LogError(Exception ex)
+    {
+        logger.LogError(ex.ToString());
     }
 }
