@@ -12,4 +12,6 @@ public interface IUserService : IBaseService
     Task<LoginResponse> Login(LoginRequest body);
 
     Task<LoginResponse> RefreshToken(string refreshToken);
+    
+    Task<(int count, List<UserInfo>)> QueryableList(int pageIndex, int pageSize, string query);
 }

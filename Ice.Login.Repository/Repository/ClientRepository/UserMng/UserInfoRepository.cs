@@ -18,6 +18,21 @@ public class UserInfoRepository(IceDbContext dbContext,ILogger<DbRepository> log
         return await DbContext.SaveChangesAsync() > 0;
     }
 
+    public async Task<(int count, List<UserInfo>)> QueryableList(Expression<Func<UserInfo, bool>> whereExpression, int pageIndex, int pageSize,string query)
+    {
+        var includes = new Expression<Func<UserInfo, object>>[] { };
+        var data = await GetPagedDataWithFilterAsync(whereExpression,GetWhereExpression(query), pageIndex, pageSize, includes);
+        return (data.TotalCount, data.Data);
+    }
+
+    private Expression<Func<UserInfo, bool>> GetWhereExpression(string query)
+    {
+        if (string.IsNullOrEmpty(query))
+        {
+            return userInfo => true;
+        }
+        return userInfo => userInfo.NickName.Contains(query) || userInfo.UserName.Contains(query);
+    }
     public async Task<UserInfo> GetUserinfo(Expression<Func<UserInfo, bool>> whereExpression)
     {
         return await Queryable(whereExpression);

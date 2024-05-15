@@ -39,4 +39,11 @@ public abstract class BaseRepository<TContext> : IBaseRepository, IUnitOfWork wh
 
     public abstract Task<(List<T> Data, int TotalCount)> GetPagedDataAsync<T>(Expression<Func<T, bool>> whereExpression,
         int pageIndex, int pageSize, params Expression<Func<T, object>>[] includes) where T : class;
+
+    public abstract Task<(List<T> Data, int TotalCount)> GetPagedDataWithFilterAsync<T>(
+        Expression<Func<T, bool>> whereExpression,
+        Expression<Func<T, bool>> filterExpression,
+        int pageIndex,
+        int pageSize,
+        params Expression<Func<T, object>>[] includes) where T : class;
 }

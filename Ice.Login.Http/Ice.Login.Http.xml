@@ -40,6 +40,12 @@
             <param name="body"></param>
             <returns></returns>
         </member>
+        <member name="M:Ice.Login.Http.Controllers.ClientApi.UserInfoController.GetUserList(Ice.Login.Service.Service.ClientService.UserMng.GetUserInfoListRequest)">
+            <summary>
+                注册账号
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Ice.Login.Http.Middleware.RequestMiddleware">
             <summary>
                 请求中间件类，用于处理HTTP请求并获取客户端IP地址。

@@ -79,6 +79,37 @@ public class DbRepository(IceDbContext dbContext,ILogger<DbRepository> logger) :
         }
     }
 
+    public override async Task<(List<T> Data, int TotalCount)> GetPagedDataWithFilterAsync<T>(Expression<Func<T, bool>> whereExpression, Expression<Func<T, bool>> filterExpression, int pageIndex,
+        int pageSize, params Expression<Func<T, object>>[] includes)
+    {
+        try
+        {
+            // 应用whereExpression和includes构建初始查询
+            var baseQuery = DbContext.Set<T>().Where(whereExpression);
+        
+            // 计算总条数时，先应用whereExpression，但不应用filterExpression，因为filterExpression是用于分页数据上的额外过滤
+            var totalCount = await baseQuery.CountAsync();
+
+            // 构建最终查询，应用whereExpression、filterExpression和includes
+            var finalQuery = BuildQuery<T>(whereExpression, includes);
+            finalQuery = finalQuery.Where(filterExpression);
+
+            // 分页处理
+            var data = await finalQuery
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalCount);
+        }
+        catch (Exception e)
+        {
+            LogError(e);
+            throw;
+        }
+    }
+
+
     private void LogError(Exception ex)
     {
         logger.LogError(ex.ToString());

@@ -75,4 +75,9 @@ public class UserService(
         return new LoginResponse
             { UserName = userInfo.UserName, accessToken = token.Token, RefreshToken = token.RefreshToken };
     }
+
+    public async Task<(int count, List<UserInfo>)> QueryableList(int pageIndex, int pageSize, string query)
+    {
+        return await userInfoRepository.QueryableList(it => true, pageIndex, pageSize, query);
+    }
 }

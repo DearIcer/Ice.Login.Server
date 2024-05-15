@@ -74,3 +74,12 @@ public class RefreshTokenRequest
     [Required]
     public string RefreshToken { get; set; }
 }
+
+public class GetUserInfoListRequest
+{
+    public int PageIndex { get; set; } = 1;
+
+    public int PageSize { get; set; } = 10;
+
+    public string Query { get; set; }
+}
