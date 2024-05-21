@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Ice.Login.Entity.Backend;
 using Ice.Login.Repository.Context;
+using Ice.Login.Repository.Extensions;
 using Ice.Login.Repository.IRepository.ClientRepository.UserMng;
 using Ice.Login.Repository.Repository.Base;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,8 @@ public class UserInfoRepository(IceDbContext dbContext,ILogger<DbRepository> log
     }
     public async Task<UserInfo> GetUserinfo(Expression<Func<UserInfo, bool>> whereExpression)
     {
-        return await Queryable(whereExpression);
-        return await DbContext.UserInfo.AsQueryable().Where(whereExpression).FirstOrDefaultAsync();
+        return await DbContext.UserInfo.GetAsync(whereExpression);
+        // return await Queryable(whereExpression);
+        // return await DbContext.UserInfo.AsQueryable().Where(whereExpression).FirstOrDefaultAsync();
     }
 }
