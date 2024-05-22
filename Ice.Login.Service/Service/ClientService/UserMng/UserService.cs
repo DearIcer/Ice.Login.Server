@@ -30,7 +30,7 @@ public class UserService(
         {
             NickName = body.NickName,
             UserName = body.UserName,
-            Password = HashTools.MD5Encrypt32(body.Password),
+            Password = HashTools.Md5Encrypt32(body.Password),
             IsDelete = false
         };
         await BeginTransaction();
@@ -42,7 +42,7 @@ public class UserService(
     public async Task<LoginResponse> Login(LoginRequest body)
     {
         var userInfo = await userInfoRepository.GetUserinfo(it => it.UserName == body.UserName &&
-                                                                  it.Password == HashTools.MD5Encrypt32(body.Password));
+                                                                  it.Password == HashTools.Md5Encrypt32(body.Password));
         if (userInfo == null) throw new KnownException("用户名或密码错误", ErrorCode.PasswordError);
 
         var token = jwtTokenGenerator.GenerateToken(userInfo);

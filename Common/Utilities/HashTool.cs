@@ -5,7 +5,7 @@ namespace Common.Utilities;
 
 public static class HashTools
 {
-    public static string MD5Encrypt32(string input = "")
+    public static string Md5Encrypt32(string input = "")
     {
         var pwd = string.Empty;
         try
