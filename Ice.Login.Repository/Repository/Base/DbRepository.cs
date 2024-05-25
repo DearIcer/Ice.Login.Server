@@ -108,9 +108,9 @@ public class DbRepository(IceDbContext dbContext, ILogger<DbRepository> logger)
     //     }
     // }
 
-
-    private void LogError(Exception ex)
-    {
-        logger.LogError(ex.ToString());
-    }
+    //
+    // private void LogError(Exception ex)
+    // {
+    //     logger.LogError(ex.ToString());
+    // }
 }
