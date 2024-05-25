@@ -16,11 +16,11 @@ public class UserInfoController(IUserService userService) : BaseController
     [AllowAnonymous]
     public async Task<ApiResult> GetUserList([FromBody] GetUserInfoListRequest body)
     {
-        var data = await userService.QueryableList(body.PageIndex,body.PageSize,body.Query);
-        return new ApiResult()
+        var data = await userService.QueryableList(body.PageIndex, body.PageSize, body.Query);
+        return new ApiResult
         {
             Data = data.Item2,
-            Message = "success",
+            Message = "success"
         };
     }
 }

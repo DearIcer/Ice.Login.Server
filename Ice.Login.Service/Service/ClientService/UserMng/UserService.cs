@@ -1,4 +1,5 @@
-﻿using Common.Error;
+﻿using System.Linq.Expressions;
+using Common.Error;
 using Common.Model;
 using Common.Utilities;
 using Ice.Login.Entity.Backend;
@@ -17,13 +18,13 @@ public class UserService(
 {
     public async Task<UserInfo> Queryable()
     {
-        var data = await userInfoRepository.GetUserinfo(it => it.Id >= 1);
+        var data = await userInfoRepository.Queryable<UserInfo>(it => it.Id >= 1);
         return data;
     }
 
     public async Task<bool> RegisterAccount(RegisterAccountRequest body)
     {
-        var data = await userInfoRepository.GetUserinfo(it => it.UserName == body.UserName);
+        var data = await userInfoRepository.Queryable<UserInfo>(it => it.UserName == body.UserName);
         if (data != null) throw new KnownException("用户名已存在", ErrorCode.AccountExists);
 
         var user = new UserInfo
@@ -41,8 +42,8 @@ public class UserService(
 
     public async Task<LoginResponse> Login(LoginRequest body)
     {
-        var userInfo = await userInfoRepository.GetUserinfo(it => it.UserName == body.UserName &&
-                                                                  it.Password == HashTools.Md5Encrypt32(body.Password));
+        var userInfo = await userInfoRepository.Queryable<UserInfo>(it => it.UserName == body.UserName &&
+                                                                          it.Password == HashTools.Md5Encrypt32(body.Password));
         if (userInfo == null) throw new KnownException("用户名或密码错误", ErrorCode.PasswordError);
 
         var token = jwtTokenGenerator.GenerateToken(userInfo);
@@ -62,7 +63,7 @@ public class UserService(
         if (!cache.TryGetValue(refreshToken, out userId))
             throw new KnownException("refreshToken无效", ErrorCode.RefreshTokenInvalid);
 
-        var userInfo = await userInfoRepository.GetUserinfo(info => info.Id == userId);
+        var userInfo = await userInfoRepository.Queryable<UserInfo>(info => info.Id == userId);
         if (userInfo == null) throw new KnownException("用户不存在", ErrorCode.UserNotExists);
         cache.Remove(refreshToken);
         var token = jwtTokenGenerator.GenerateToken(userInfo);
@@ -78,6 +79,14 @@ public class UserService(
 
     public async Task<(int count, List<UserInfo>)> QueryableList(int pageIndex, int pageSize, string query)
     {
-        return await userInfoRepository.QueryableList(it => true, pageIndex, pageSize, query);
+        var data = await userInfoRepository.GetPagedDataWithFilterAsync<UserInfo>(it => true, GetWhereExpression(query),
+            pageIndex, pageSize);
+        return (data.TotalCount, data.Data);
+    }
+    
+    private Expression<Func<UserInfo, bool>> GetWhereExpression(string query)
+    {
+        if (string.IsNullOrEmpty(query)) return userInfo => true;
+        return userInfo => userInfo.NickName.Contains(query) || userInfo.UserName.Contains(query);
     }
 }
