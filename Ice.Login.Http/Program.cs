@@ -125,8 +125,8 @@ try
             return new BadRequestObjectResult(result);
         };
     });
-    builder.Services.AddSerilog(); 
-    builder.Services.AddLogging();
+    builder.Services.AddSerilog(dispose: true); 
+    // builder.Services.AddLogging();
     builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
     var jwt = builder.Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>()!;
     builder.Services.AddSingleton(jwt);
@@ -153,7 +153,8 @@ try
 
 
     var app = builder.Build();
-
+    app.UseCors("Cors");
+    app.UseRequestPeakMiddleware();
     app.UseMiddleware<AskMiddleware>();
     app.UseSerilogRequestLogging();
     app.UseMiddleware<SessionValidationMiddleware>();

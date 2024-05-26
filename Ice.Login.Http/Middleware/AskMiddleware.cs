@@ -13,7 +13,7 @@ public class AskMiddleware
     /// </summary>
     private readonly ILogger<AskMiddleware> _logger;
 
-    private bool isRegisted;
+    private bool _isRegisted;
 
 
     /// <summary>
@@ -49,14 +49,17 @@ public class AskMiddleware
                 //存储响应数据
                 context.Response.Body = ms;
                 await _next(context);
-                ResponseDataLog(context.Response, ms, olnycode);
+                ResponseDataLog(ms, olnycode);
                 ms.Position = 0;
                 await ms.CopyToAsync(originalBody);
             }
 
             var endTime = DateTime.Now;
             var span = endTime - startTime;
-            //Console.WriteLine("响应时间：" + span.TotalSeconds + "s");
+            if (span.TotalSeconds > 1)
+            {
+                _logger.LogInformation("ASK-" + olnycode + "请求耗时" + span.TotalSeconds + "秒");
+            }
         }
         else
         {
@@ -72,20 +75,20 @@ public class AskMiddleware
         var content = $" QueryData:{request.Path + request.QueryString}\r\n BodyData:{await sr.ReadToEndAsync()}";
         if (!string.IsNullOrEmpty(content))
         {
-            Parallel.For(0, 1, e => { _logger.LogInformation("ASK-" + code + "输入数据\r\n" + content); });
+            Parallel.For(0, 1, _ => { _logger.LogInformation("ASK-" + code + "输入数据\r\n" + content); });
             request.Body.Position = 0;
         }
     }
 
-    private void ResponseDataLog(HttpResponse response, MemoryStream ms, string code)
+    private void ResponseDataLog(MemoryStream ms, string code)
     {
         ms.Position = 0;
-        var ResponseBody = new StreamReader(ms).ReadToEnd();
+        var responseBody = new StreamReader(ms).ReadToEnd();
 
         // 去除 Html
         var reg = "<[^>]+>";
-        var isHtml = Regex.IsMatch(ResponseBody, reg);
-        if (!string.IsNullOrEmpty(ResponseBody))
-            Parallel.For(0, 1, e => { _logger.LogInformation("ASK-" + code + "输出数据\r\n" + ResponseBody); });
+  
+        if (!string.IsNullOrEmpty(responseBody))
+            Parallel.For(0, 1, _ => { _logger.LogInformation("ASK-" + code + "输出数据\r\n" + Regex.Unescape(responseBody)); });
     }
 }
