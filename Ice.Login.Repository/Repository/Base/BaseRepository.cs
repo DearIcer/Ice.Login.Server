@@ -72,12 +72,5 @@ public abstract class BaseRepository<TContext> : IBaseRepository, IUnitOfWork wh
     {
         await DbContext.Database.RollbackTransactionAsync();
     }
-
-    private IQueryable<T> BuildQuery<T>(Expression<Func<T, bool>> whereExpression,
-        IEnumerable<Expression<Func<T, object>>> includes) where T : class
-    {
-        var query = DbContext.Set<T>().Where(whereExpression);
-        foreach (var include in includes) query = query.Include(include);
-        return query;
-    }
+    
 }
