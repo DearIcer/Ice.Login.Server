@@ -79,7 +79,7 @@ public class UserService(
 
     public async Task<(int count, List<UserInfo>)> QueryableList(int pageIndex, int pageSize, string query)
     {
-        var data = await userInfoRepository.GetPagedDataWithFilterAsync<UserInfo>(it => true, GetWhereExpression(query),
+        var data = await userInfoRepository.GetPagedDataWithFilterAsync(it => true, GetWhereExpression(query),
             pageIndex, pageSize);
         return (data.TotalCount, data.Data);
     }

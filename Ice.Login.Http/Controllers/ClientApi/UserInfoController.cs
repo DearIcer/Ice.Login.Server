@@ -9,7 +9,7 @@ namespace Ice.Login.Http.Controllers.ClientApi;
 public class UserInfoController(IUserService userService) : BaseController
 {
     /// <summary>
-    ///     注册账号
+    ///     获取账号列表
     /// </summary>
     /// <returns></returns>
     [HttpPost]
