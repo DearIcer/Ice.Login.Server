@@ -42,7 +42,7 @@
         </member>
         <member name="M:Ice.Login.Http.Controllers.ClientApi.UserInfoController.GetUserList(Ice.Login.Service.Service.ClientService.UserMng.GetUserInfoListRequest)">
             <summary>
-                注册账号
+                获取账号列表
             </summary>
             <returns></returns>
         </member>
