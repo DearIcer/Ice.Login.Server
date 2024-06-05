@@ -64,10 +64,10 @@ public class SessionValidationMiddleware(
             var handler = new JwtSecurityTokenHandler();
             var claimsPrincipal = handler.ValidateToken(jwtToken, tokenValidationParameters, out var validatedToken);
 
-            var userId = Convert.ToInt64(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
-
+            // var userId = Convert.ToInt64(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
+            var sessionId = claimsPrincipal.FindFirstValue("SessionId");
             SessionModel session;
-            if (!cache.TryGetValue(userId, out session) ||
+            if (!cache.TryGetValue(sessionId, out session) ||
                 session.ExpirationTime < DateTime.UtcNow)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
