@@ -32,7 +32,7 @@ public class AuthorController(IUserService userService) : BaseController
     public async Task<ApiResult> Register([FromBody] RegisterAccountRequest body)
     {
         var data = await userService.RegisterAccount(body);
-        return Response(data);
+        return Ok(data);
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class AuthorController(IUserService userService) : BaseController
     public async Task<ApiResult> Login([FromBody] LoginRequest body)
     {
         var data = await userService.Login(body);
-        return Response(data);
+        return Ok(data);
     }
 
     /// <summary>
@@ -59,6 +59,6 @@ public class AuthorController(IUserService userService) : BaseController
     public async Task<ApiResult> RefreshToken([FromBody] RefreshTokenRequest body)
     {
         var data = await userService.RefreshToken(body.RefreshToken);
-        return Response(data);
+        return Ok(data);
     }
 }

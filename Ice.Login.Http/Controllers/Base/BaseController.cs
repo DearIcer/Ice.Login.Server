@@ -7,7 +7,7 @@ namespace Ice.Login.Http.Controllers.Base;
 [Route("api/[controller]/[action]")]
 public class BaseController : Controller
 {
-    protected ApiResult Response(object data = null, string message = null, string errorCode = null)
+    protected ApiResult Ok(object data = null, string message = null, string errorCode = null)
     {
         return new ApiResult
         {
