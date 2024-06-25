@@ -56,10 +56,11 @@ public class AskMiddleware
 
             var endTime = DateTime.Now;
             var span = endTime - startTime;
-            if (span.TotalSeconds > 1)
-            {
-                _logger.LogInformation("ASK-" + olnycode + "请求耗时" + span.TotalSeconds + "秒");
-            }
+            // if (span.TotalSeconds > 1)
+            // {
+            //     _logger.LogInformation("ASK-" + olnycode + "请求耗时" + span.TotalSeconds + "秒");
+            // }
+            _logger.LogInformation("ASK-" + olnycode + "请求耗时" + span.TotalSeconds + "秒");
         }
         else
         {
