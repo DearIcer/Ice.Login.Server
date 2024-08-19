@@ -39,6 +39,16 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "KR_https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://192.168.1.215:7282;http://192.168.1.215:5062",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
