@@ -17,7 +17,7 @@ public static class AutofacExtension
                 containerBuilder.RegisterAssemblyTypes(Assembly.Load("Ice.Login.Repository"))
                     .Where(t => typeof(IBaseRepository).IsAssignableFrom(t))
                     .AsImplementedInterfaces()
-                    .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+                    .PropertiesAutowired(PropertyWiringOptions.None)
                     .InstancePerLifetimeScope();
             });
 
@@ -27,7 +27,7 @@ public static class AutofacExtension
                 containerBuilder.RegisterAssemblyTypes(Assembly.Load("Ice.Login.Service"))
                     .Where(t => typeof(IBaseService).IsAssignableFrom(t))
                     .AsImplementedInterfaces()
-                    .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+                    .PropertiesAutowired(PropertyWiringOptions.None)
                     .InstancePerLifetimeScope();
             });
         return builder;
